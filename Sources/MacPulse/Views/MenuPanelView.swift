@@ -10,10 +10,27 @@ struct MenuPanelView: View {
         VStack(spacing: 0) {
             header
             Hairline()
-            ScrollView {
+            // A ScrollView has no intrinsic height. Inside a size-to-fit popover
+            // that resolves to zero, so give it a definite frame.
+            ScrollView(.vertical) {
                 PanelContent(model: model, engine: engine)
             }
-            .frame(maxHeight: 520)
+            .frame(height: 500)
+            .scrollIndicators(.never)
+            .background(
+                // Reports the popover's realised size to stderr when
+                // MACPULSE_DEBUG_SIZE is set, so layout regressions are
+                // visible without a screenshot.
+                GeometryReader { proxy in
+                    Color.clear.onAppear {
+                        if ProcessInfo.processInfo.environment["MACPULSE_DEBUG_SIZE"] != nil {
+                            FileHandle.standardError.write(
+                                "MacPulse popover content: \(Int(proxy.size.width))x\(Int(proxy.size.height))\n".data(using: .utf8)!
+                            )
+                        }
+                    }
+                }
+            )
             Hairline()
             footer
         }
