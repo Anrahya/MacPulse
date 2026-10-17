@@ -5,6 +5,10 @@ A macOS menu bar system monitor. Native SwiftUI, no dependencies, no Xcode requi
 MacPulse watches CPU, memory, battery, network, storage, processes, and thermal
 sensors, and surfaces them in a compact popover plus a full dashboard window.
 
+![Menu bar panel](docs/screenshots/panel.png)
+
+![CPU dashboard](docs/screenshots/dashboard-cpu.png)
+
 ## Requirements
 
 - macOS 14 or later
