@@ -99,7 +99,7 @@ enum Theme {
 // MARK: - Semantic status
 
 /// Maps a 0...1 load ratio to a restrained semantic colour.
-enum LoadLevel {
+enum LoadLevel: Equatable {
     case calm, elevated, high, critical
 
     init(_ ratio: Double) {

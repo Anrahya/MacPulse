@@ -8,6 +8,11 @@ let package = Package(
         .executableTarget(
             name: "MacPulse",
             path: "Sources/MacPulse"
+        ),
+        .testTarget(
+            name: "MacPulseTests",
+            dependencies: ["MacPulse"],
+            path: "Tests/MacPulseTests"
         )
     ]
 )

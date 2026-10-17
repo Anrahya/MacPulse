@@ -34,7 +34,6 @@ final class MemorySampler {
         let wired      = UInt64(stats.wire_count) * page
         let compressed = UInt64(stats.compressor_page_count) * page
         let inactive   = UInt64(stats.inactive_count) * page
-        let speculative = UInt64(stats.speculative_count) * page
         let free       = UInt64(stats.free_count) * page
         let purgeable  = UInt64(stats.purgeable_count) * page
 

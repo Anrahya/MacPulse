@@ -1,0 +1,62 @@
+name: Bug report
+description: Something is not working as expected
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for the report. MacPulse reads hardware directly, so behaviour
+        varies by Mac model — please include your model.
+
+  - type: input
+    id: macos
+    attributes:
+      label: macOS version
+      description: Output of `sw_vers`
+      placeholder: "15.3 (24D60)"
+    validations:
+      required: true
+
+  - type: input
+    id: model
+    attributes:
+      label: Mac model
+      description: Output of `sysctl -n hw.model`
+      placeholder: "MacBookAir10,1 (Apple M1)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: install
+    attributes:
+      label: How did you install it?
+      options:
+        - Built from source
+        - Downloaded a release build
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: What happened instead?
+      description: Screenshots help a lot for layout issues.
+    validations:
+      required: true
+
+  - type: textarea
+    id: extra
+    attributes:
+      label: Anything else?
+      description: |
+        If you set `MACPULSE_DEBUG_SIZE=1`, the app prints the realised popover
+        size to stderr — useful for layout bugs.
+    validations:
+      required: false
