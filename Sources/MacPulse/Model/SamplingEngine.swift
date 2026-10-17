@@ -52,11 +52,16 @@ final class SamplingEngine: ObservableObject {
         // delta-based samplers have a baseline to compare against.
         prime()
 
+        // Bind strongly before entering the Task: reading the weak `self`
+        // inside concurrent code is what Swift 6 rejects. The timer holds the
+        // closure, and the closure captures `self` weakly, so no cycle forms.
         fastTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { [weak self] _ in
-            Task { @MainActor in self?.tickFast() }
+            guard let self else { return }
+            Task { @MainActor in self.tickFast() }
         }
         slowTimer = Timer.scheduledTimer(withTimeInterval: max(interval * 2, 4), repeats: true) { [weak self] _ in
-            Task { @MainActor in self?.tickSlow() }
+            guard let self else { return }
+            Task { @MainActor in self.tickSlow() }
         }
     }
 
