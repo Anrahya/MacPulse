@@ -18,7 +18,7 @@ jobs:
     timeout-minutes: 20
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode.app
@@ -47,7 +47,7 @@ jobs:
           codesign --verify --deep --strict "$APP" && echo "signature ok"
 
       - name: Upload app bundle
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: MacPulse-app
           path: build/MacPulse.app

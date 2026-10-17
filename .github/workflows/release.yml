@@ -1,0 +1,74 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag to build (e.g. v2.0.0)"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build & publish
+    runs-on: macos-14
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ github.event.inputs.tag || github.ref }}
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode.app
+
+      - name: Build app bundle
+        run: ./scripts/build-app.sh release
+
+      - name: Package
+        id: package
+        run: |
+          set -euo pipefail
+          VERSION="${GITHUB_REF_NAME}"
+          if [ -n "${{ github.event.inputs.tag }}" ]; then
+            VERSION="${{ github.event.inputs.tag }}"
+          fi
+          ZIP="MacPulse-${VERSION}-macos.zip"
+          ditto -c -k --sequesterRsrc --keepParent build/MacPulse.app "$ZIP"
+          shasum -a 256 "$ZIP" > "$ZIP.sha256"
+          echo "zip=$ZIP" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          cat "$ZIP.sha256"
+
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.package.outputs.version }}
+          name: ${{ steps.package.outputs.version }}
+          draft: true
+          generate_release_notes: true
+          body: |
+            MacPulse ${{ steps.package.outputs.version }}
+
+            Download the `.zip`, unzip it, and move `MacPulse.app` to
+            `/Applications`.
+
+            The build is signed ad hoc and not notarised, so on first launch
+            macOS may block it. If so, either right-click the app and choose
+            *Open*, or allow it under *System Settings → Privacy & Security*.
+
+            Verify the download with the attached `.sha256` file:
+
+            ```bash
+            shasum -a 256 -c MacPulse-*.zip.sha256
+            ```
+          files: |
+            ${{ steps.package.outputs.zip }}
+            ${{ steps.package.outputs.zip }}.sha256
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
