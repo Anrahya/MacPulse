@@ -11,9 +11,13 @@ no Xcode required to build.
 MacPulse watches CPU, memory, battery, network, storage, processes, and thermal
 sensors, and surfaces them in a compact popover plus a full dashboard window.
 
-![Menu bar popover](docs/screenshots/panel-dark.png)
+| Dark | Light |
+| --- | --- |
+| ![Menu bar popover, dark](docs/screenshots/panel-dark.png) | ![Menu bar popover, light](docs/screenshots/panel-light.png) |
 
 ![CPU dashboard](docs/screenshots/dashboard-cpu.png)
+
+![Storage dashboard](docs/screenshots/dashboard-storage.png)
 
 ## Contents
 
@@ -146,10 +150,13 @@ differ between Apple Silicon and Intel:
   sensor registry, the same source `powermetrics` uses, which works unprivileged.
 - **`sysctl KERN_PROC` is restricted under SIP**, so process data uses `libproc`
   (`proc_listpids` + `proc_pid_rusage`) instead.
-- **Raw battery capacity is nested.** On modern Macs, `DesignCapacity` and
+- **Battery capacity is nested.** On modern Macs, `DesignCapacity` and
   `AppleRawMaxCapacity` live inside a `BatteryData` dictionary rather than at the
   top level of the IORegistry node. Reading only the top level gives a battery
   health of 0%.
+- **`df /` under-reports disk usage.** On modern macOS, `/` is a read-only
+  sealed system snapshot, so it only accounts for the OS itself. The storage
+  figures come from the data volume, matching what Finder and `diskutil` report.
 - **`MenuBarExtra` sizes its popover to fit its content**, and a `ScrollView` has
   no intrinsic height. A scroll view inside the popover needs an explicit
   `.frame(height:)` or the body collapses to nothing. Set
