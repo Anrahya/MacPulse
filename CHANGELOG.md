@@ -7,10 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [2.1.0] - 2026-10-19
+
 ### Added
 
-- Storage card in the menu bar popover showing used, free and total capacity
-  for the boot volume
+- Storage card in the menu bar popover, showing used percentage, free space and
+  total capacity for the boot volume
+
+### Fixed
+
+- Storage figures now report the data volume rather than the read-only sealed
+  root snapshot, which under-reported usage by a wide margin
 
 ## [2.0.0] - 2026-10-17
 
@@ -39,5 +46,6 @@ with an external drive.
 - Built with Swift Package Manager; a full Xcode install is not required to
   compile, though it is needed to run the test suite
 
-[Unreleased]: https://github.com/Anrahya/MacPulse/compare/v2.0.0...HEAD
+[Unreleased]: https://github.com/Anrahya/MacPulse/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/Anrahya/MacPulse/releases/tag/v2.1.0
 [2.0.0]: https://github.com/Anrahya/MacPulse/releases/tag/v2.0.0
