@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- Storage card in the menu bar popover showing used, free and total capacity
+  for the boot volume
+
 ## [2.0.0] - 2026-10-17
 
 First public release. A ground-up rewrite after the original source was lost

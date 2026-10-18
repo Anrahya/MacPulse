@@ -13,6 +13,7 @@ struct PanelContent: View {
             memoryCard
             if engine.battery.isPresent { batteryCard }
             networkCard
+            storageCard
             temperaturesCard
             if model.showProcesses { processesCard }
         }
@@ -217,6 +218,43 @@ struct PanelContent: View {
                     .contentTransition(.numericText())
             }
             Spacer(minLength: 0)
+        }
+    }
+
+    // MARK: - Storage
+
+    private var storageCard: some View {
+        Card(padding: Theme.Space.m) {
+            VStack(alignment: .leading, spacing: Theme.Space.s) {
+                HStack(alignment: .firstTextBaseline) {
+                    SectionHeader(title: "Storage")
+                    Spacer()
+                    MicroLabel(text: engine.storage.volumeName)
+                }
+                HStack(alignment: .firstTextBaseline, spacing: 2) {
+                    Text(Format.percent(engine.storage.usedRatio))
+                        .font(Theme.Typeface.numeric(22))
+                        .foregroundStyle(LoadLevel(engine.storage.usedRatio).color)
+                        .contentTransition(.numericText())
+                    Text("%")
+                        .font(Theme.Typeface.caption(10))
+                        .foregroundStyle(Theme.inkTertiary)
+                    Spacer()
+                    Text(Format.bytes(engine.storage.free) + " free")
+                        .font(Theme.Typeface.numeric(10, weight: .medium))
+                        .foregroundStyle(Theme.inkSecondary)
+                }
+                MeterBar(
+                    ratio: engine.storage.usedRatio,
+                    tint: LoadLevel(engine.storage.usedRatio).color,
+                    height: 5
+                )
+                HStack {
+                    MicroLabel(text: Format.bytes(engine.storage.used) + " used")
+                    Spacer()
+                    MicroLabel(text: Format.bytes(engine.storage.total) + " total")
+                }
+            }
         }
     }
 
